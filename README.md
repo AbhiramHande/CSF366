@@ -14,7 +14,6 @@ This is the `script.sh` bash script that you can use to update the local directo
 REPO_URL="https://github.com/AbhiramHande/CSF366"        # URL to GitHub repository
 REPO_DIR="/home/pi/Project/source_code"                  # Path to your local repository
 BRANCH="main"                                            # Branch you want to update
-EXECUTABLE="trial"                                       # Program to run
 
 clone_repository(){
     echo "Cloning GitHub repository..."
