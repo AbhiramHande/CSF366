@@ -41,16 +41,31 @@ update_repository() {
 }
 
 run_program() {
-    echo "Running the program..."
-    if [ -f "$EXECUTABLE" ] && [ -x "$EXECUTABLE" ]; then
-        ./"$EXECUTABLE"
-    elif [ -f "$EXECUTABLE.py" ]; then
-        python3 "$EXECUTABLE.py"  # Run the program as a Python script
-    else
-        echo "Error: Executable or script '$EXECUTABLE' not found."
+    echo "Finding bash file to execute the program..."
+    NUM_SH_FILES=$(ls -1 *.sh | wc -l)
+    if [ "$NUM_SH_FILES" -eq 0 ]; then
+        echo "No bash file found."
         exit 1
+    elif [ "$NUM_SH_FILES" -eq 1 ]; then
+    	SCRIPT=$(ls -1 *.sh)
+    	echo "Running $SCRIPT..."
+        chmod +x "$SCRIPT"
+        ./"$SCRIPT"
+    else
+        echo "Multiple script files found: Kindly select the relevant one."
+        ls -1 *.sh
+        read -p "Enter the script number you want to run: " INPUT
+        
+	if [ "$INPUT" -lt 1 ] || [ "$INPUT" -gt "$NUM_SH_FILES" ]; then
+	    echo "Error: Invalid input."
+	    exit 1
+	else
+	    SCRIPT=$(ls -1 *.sh | head -n "$INPUT" | tail -1)
+	    echo "Running $SCRIPT..."
+	    chmod +x "$SCRIPT"
+	    ./"$SCRIPT"
+	fi
     fi
-    echo "Program execution complete."
 }
 
 main() {
