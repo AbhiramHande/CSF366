@@ -80,10 +80,12 @@ def speed_full():
 
 
 def main():
+    print("Starting...")
     speed_full()
     forward_move()
     sleep(2)
     stop_move()
     GPIO.cleanup()
+    print("Done...")
     
 main()
