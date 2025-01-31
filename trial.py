@@ -49,6 +49,7 @@ pwm_3 = GPIO.PWM(ena_a_high, 1000)
 pwm_4 = GPIO.PWM(ena_b_high, 1000)
 
 def stop_move():
+    print("Halting...")
     GPIO.output(in_motor_fwd_1, GPIO.LOW)
     GPIO.output(in_motor_fwd_2, GPIO.LOW)
     GPIO.output(in_motor_fwd_3, GPIO.LOW)
@@ -58,6 +59,7 @@ def stop_move():
     GPIO.output(in_motor_bkd_3, GPIO.LOW)
     GPIO.output(in_motor_bkd_4, GPIO.LOW)
 def forward_move():
+    print("Moving Forward...")
     GPIO.output(in_motor_fwd_1, GPIO.HIGH)
     GPIO.output(in_motor_fwd_2, GPIO.LOW)
     GPIO.output(in_motor_fwd_3, GPIO.HIGH)
@@ -73,6 +75,7 @@ def speed_med():
     pwm_3.ChangeDutyCycle(75)
     pwm_4.ChangeDutyCycle(75)
 def speed_full():
+    print("Setting speed to full")
     pwm_1.ChangeDutyCycle(100)
     pwm_2.ChangeDutyCycle(100)
     pwm_3.ChangeDutyCycle(100)
@@ -83,7 +86,10 @@ def start_setup():
     pwm_2.start(0)
     pwm_3.start(0)
     pwm_4.start(0)
-    stop_move()
+    GPIO.output(ena_a_low, GPIO.HIGH)
+    GPIO.output(ena_b_low, GPIO.HIGH)
+    GPIO.output(ena_a_high, GPIO.HIGH)
+    GPIO.output(ena_b_high, GPIO.HIGH)
 
 
 def main():
