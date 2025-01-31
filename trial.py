@@ -78,9 +78,17 @@ def speed_full():
     pwm_3.ChangeDutyCycle(100)
     pwm_4.ChangeDutyCycle(100)
 
+def start_setup():
+    pwm_1.start(0)
+    pwm_2.start(0)
+    pwm_3.start(0)
+    pwm_4.start(0)
+    stop_move()
+
 
 def main():
     print("Starting...")
+    start_setup()
     speed_full()
     forward_move()
     sleep(2)
