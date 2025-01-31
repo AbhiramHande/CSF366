@@ -3,6 +3,9 @@
 import RPi.GPIO as GPIO
 from time import sleep
 
+result = subprocess.run(['raspi-gpio', 'get'], capture_output=True, text=True)
+print(result.stdout)   
+
 in_motor_bkd_1 = 24
 in_motor_bkd_2 = 23
 in_motor_bkd_3 = 13
@@ -90,7 +93,8 @@ def start_setup():
     GPIO.output(ena_b_low, GPIO.HIGH)
     GPIO.output(ena_a_high, GPIO.HIGH)
     GPIO.output(ena_b_high, GPIO.HIGH)
-
+    result = subprocess.run(['raspi-gpio', 'get'], capture_output=True, text=True)
+    print(result.stdout)   
 
 def main():
     print("Starting...")
@@ -101,6 +105,8 @@ def main():
     stop_move()
     sleep(2)
     GPIO.cleanup()
+    result = subprocess.run(['raspi-gpio', 'get'], capture_output=True, text=True)
+    print(result.stdout)   
     print("Done...")
     
 main()
