@@ -1,6 +1,6 @@
 #A simple program to test whether the GPIO pins of RPi and the L298N Motor Cards work as expected
 
-from gpiozero import LED
+import RPi.GPIO as GPIO
 from time import sleep
 
 in_motor_bkd_1 = 24
