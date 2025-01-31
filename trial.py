@@ -82,10 +82,10 @@ def speed_full():
     pwm_4.ChangeDutyCycle(100)
 
 def start_setup():
-    pwm_1.start(0)
-    pwm_2.start(0)
-    pwm_3.start(0)
-    pwm_4.start(0)
+    pwm_1.start(100)
+    pwm_2.start(100)
+    pwm_3.start(100)
+    pwm_4.start(100)
     GPIO.output(ena_a_low, GPIO.HIGH)
     GPIO.output(ena_b_low, GPIO.HIGH)
     GPIO.output(ena_a_high, GPIO.HIGH)
@@ -99,6 +99,7 @@ def main():
     forward_move()
     sleep(2)
     stop_move()
+    sleep(2)
     GPIO.cleanup()
     print("Done...")
     
