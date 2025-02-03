@@ -100,7 +100,7 @@ def main():
     print("Starting...")
     start_setup()
     speed_full()
-    while(true)
+    while(true):
         forward_move()
     sleep(2)
     stop_move()
