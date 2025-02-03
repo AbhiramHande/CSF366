@@ -1,6 +1,6 @@
 #A simple program to test whether the GPIO pins of RPi and the L298N Motor Cards work as expected
 import subprocess
-from pynput import keyboard
+import keyboard
 import RPi.GPIO as GPIO
 from time import sleep
 
