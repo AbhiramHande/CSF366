@@ -61,8 +61,8 @@ def stop_move():
     GPIO.output(in_motor_bkd_2, GPIO.LOW)
     GPIO.output(in_motor_bkd_3, GPIO.LOW)
     GPIO.output(in_motor_bkd_4, GPIO.LOW)
+    
 def forward_move():
-    print("Moving Forward...")
     GPIO.output(in_motor_fwd_1, GPIO.HIGH)
     GPIO.output(in_motor_fwd_2, GPIO.LOW)
     GPIO.output(in_motor_fwd_3, GPIO.HIGH)
@@ -73,7 +73,6 @@ def forward_move():
     GPIO.output(in_motor_bkd_4, GPIO.LOW)
 
 def backward_move():
-    print("Moving Forward...")
     GPIO.output(in_motor_fwd_1, GPIO.LOW)
     GPIO.output(in_motor_fwd_2, GPIO.HIGH)
     GPIO.output(in_motor_fwd_3, GPIO.LOW)
@@ -83,8 +82,7 @@ def backward_move():
     GPIO.output(in_motor_bkd_3, GPIO.LOW)
     GPIO.output(in_motor_bkd_4, GPIO.LOW)
 
-def side_move():
-    print("Moving Side...")
+def side_fwd_move():
     GPIO.output(in_motor_fwd_1, GPIO.LOW)
     GPIO.output(in_motor_fwd_2, GPIO.LOW)
     GPIO.output(in_motor_fwd_3, GPIO.LOW)
@@ -94,13 +92,22 @@ def side_move():
     GPIO.output(in_motor_bkd_3, GPIO.HIGH)
     GPIO.output(in_motor_bkd_4, GPIO.LOW)
 
+def side_bkd_move():
+    GPIO.output(in_motor_fwd_1, GPIO.LOW)
+    GPIO.output(in_motor_fwd_2, GPIO.LOW)
+    GPIO.output(in_motor_fwd_3, GPIO.LOW)
+    GPIO.output(in_motor_fwd_4, GPIO.LOW)
+    GPIO.output(in_motor_bkd_1, GPIO.LOW)
+    GPIO.output(in_motor_bkd_2, GPIO.HIGH)
+    GPIO.output(in_motor_bkd_3, GPIO.LOW)
+    GPIO.output(in_motor_bkd_4, GPIO.HIGH)
+
 def speed_med():
     pwm_1.ChangeDutyCycle(75)
     pwm_2.ChangeDutyCycle(75)
     pwm_3.ChangeDutyCycle(75)
     pwm_4.ChangeDutyCycle(75)
 def speed_full():
-    print("Setting speed to full")
     pwm_1.ChangeDutyCycle(100)
     pwm_2.ChangeDutyCycle(100)
     pwm_3.ChangeDutyCycle(100)
@@ -116,18 +123,29 @@ def start_setup():
     GPIO.output(ena_a_high, GPIO.HIGH)
     GPIO.output(ena_b_high, GPIO.HIGH) 
 
+
 def main():
-    print("Starting...")
     start_setup()
     speed_full()
-    forward_move()
-    sleep(2)
-    backward_move()
-    sleep(2)
-    side_move()
-    sleep(2)
+    try:
+        while True:
+            if keyboard.is_pressed('w'):
+                forward_move()
+            elif keyboard.is_pressed('s'):
+                backward_move()
+            elif keyboard.is_pressed('a'):
+                side_fwd_move()
+            elif keyboard.is_pressed('d'):
+                side_bkd_move()
+            elif keyboard.is_pressed('q'):
+                print("Exiting...")
+                break
+
+            sleep(0.2)
+
+    except KeyboardInterrupt:
+        print("Interrupted by user.")
     stop_move()
     GPIO.cleanup()
-    print("Done...")
     
 main()
