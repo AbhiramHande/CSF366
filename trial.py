@@ -67,9 +67,9 @@ def forward_move():
     GPIO.output(in_motor_fwd_2, GPIO.LOW)
     GPIO.output(in_motor_fwd_3, GPIO.HIGH)
     GPIO.output(in_motor_fwd_4, GPIO.LOW)
-    GPIO.output(in_motor_bkd_1, GPIO.LOW)
+    GPIO.output(in_motor_bkd_1, GPIO.HIGH)
     GPIO.output(in_motor_bkd_2, GPIO.LOW)
-    GPIO.output(in_motor_bkd_3, GPIO.LOW)
+    GPIO.output(in_motor_bkd_3, GPIO.HIGH)
     GPIO.output(in_motor_bkd_4, GPIO.LOW)
 
 def speed_med():
