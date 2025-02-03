@@ -142,6 +142,7 @@ def main():
                 side_bkd_move()
             elif keyboard.is_pressed('q'):
                 print("Exiting...")
+                break
             else
                 stop_move()
 
