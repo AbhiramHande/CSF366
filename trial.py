@@ -143,7 +143,7 @@ def main():
             elif keyboard.is_pressed('q'):
                 print("Exiting...")
                 break
-            else
+            else:
                 stop_move()
 
             sleep(0.2)
