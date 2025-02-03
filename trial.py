@@ -23,6 +23,8 @@ ena_a_low = 14
 ena_b_low = 17
 
 GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+
 
 # Setup Motors for Vertical Movement
 GPIO.setup(in_motor_fwd_1, GPIO.OUT)
