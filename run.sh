@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python3 trial.py
+sudo python3 trial.py
