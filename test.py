@@ -13,8 +13,6 @@ print("PWM is running at 50% duty cycle")
 
 result = subprocess.run(['raspi-gpio', 'get'], capture_output=True, text=True)
 print(result.stdout)  
-print(result.stderr)  
-print(result.returncode) 
 
 sleep(5)
 pwm.stop()
@@ -22,6 +20,4 @@ GPIO.cleanup()
 
 result = subprocess.run(['raspi-gpio', 'get'], capture_output=True, text=True)
 print(result.stdout)  
-print(result.stderr)  
-print(result.returncode) 
 print("Test complete.")
