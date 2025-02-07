@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo python3 trial.py
+sudo python3 rpi_trial.py
