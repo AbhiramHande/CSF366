@@ -30,14 +30,6 @@ ena_b_low = 17
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-# Setup Motors for Vertical Movement
-for pin in [in_motor_fwd_1, in_motor_fwd_2, in_motor_fwd_3, in_motor_fwd_4, ena_a_low, ena_b_low]:
-    GPIO.setup(pin, GPIO.OUT)
-    GPIO.output(pin, GPIO.LOW)
-
-pwm_1 = GPIO.PWM(ena_a_low, 1000)
-pwm_2 = GPIO.PWM(ena_b_low, 1000)
-
 # Setup Motors for Horizontal Movement
 for pin in [in_motor_bkd_1, in_motor_bkd_2, in_motor_bkd_3, in_motor_bkd_4, ena_a_high, ena_b_high]:
     GPIO.setup(pin, GPIO.OUT)
@@ -45,6 +37,14 @@ for pin in [in_motor_bkd_1, in_motor_bkd_2, in_motor_bkd_3, in_motor_bkd_4, ena_
 
 pwm_3 = GPIO.PWM(ena_a_high, 1000)
 pwm_4 = GPIO.PWM(ena_b_high, 1000)
+
+# Setup Motors for Vertical Movement
+for pin in [in_motor_fwd_1, in_motor_fwd_2, in_motor_fwd_3, in_motor_fwd_4, ena_a_low, ena_b_low]:
+    GPIO.setup(pin, GPIO.OUT)
+    GPIO.output(pin, GPIO.LOW)
+
+pwm_1 = GPIO.PWM(ena_a_low, 1000)
+pwm_2 = GPIO.PWM(ena_b_low, 1000)
 
 def stop_move():
     print("Halting...")
