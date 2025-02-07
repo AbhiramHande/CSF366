@@ -14,7 +14,7 @@ from time import sleep
 # Define GPIO pins
 in_motor_bkd_1 = 24
 in_motor_bkd_2 = 23
-in_motor_bkd_3 = 13
+in_motor_bkd_3 = 26
 in_motor_bkd_4 = 19
 
 in_motor_fwd_1 = 9
@@ -22,7 +22,7 @@ in_motor_fwd_2 = 10
 in_motor_fwd_3 = 27
 in_motor_fwd_4 = 22
 
-ena_a_high = 26
+ena_a_high = 13
 ena_b_high = 25
 ena_a_low = 11
 ena_b_low = 17
