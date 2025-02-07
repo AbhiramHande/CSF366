@@ -17,14 +17,14 @@ in_motor_bkd_2 = 23
 in_motor_bkd_3 = 13
 in_motor_bkd_4 = 19
 
-in_motor_fwd_1 = 15
-in_motor_fwd_2 = 18
+in_motor_fwd_1 = 9
+in_motor_fwd_2 = 10
 in_motor_fwd_3 = 27
 in_motor_fwd_4 = 22
 
 ena_a_high = 26
 ena_b_high = 25
-ena_a_low = 14
+ena_a_low = 11
 ena_b_low = 17
 
 GPIO.setmode(GPIO.BCM)
