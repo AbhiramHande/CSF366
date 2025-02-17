@@ -1,117 +1,130 @@
 #A simple program to test whether the GPIO pins of Jetson and the L298N Motor Cards work as expected
-import subprocess
 import keyboard
 import Jetson.GPIO as GPIO
 from time import sleep
 
-# Display GPIO pin status
-# try:
-#     result = subprocess.run(['jetson-gpio', 'info'], capture_output=True, text=True)
-#     print(result.stdout)
-# except FileNotFoundError:
-#     print("'jetson-gpio' command not found, skipping pin status check.")
-
 # Define GPIO pins
-in_motor_bkd_1 = 24
-in_motor_bkd_2 = 23
-in_motor_bkd_3 = 26
-in_motor_bkd_4 = 19
+in1_motor_hor = 24
+in2_motor_hor = 23
+in3_motor_hor = 26
+in4_motor_hor = 19
 
-in_motor_fwd_1 = 9
-in_motor_fwd_2 = 10
-in_motor_fwd_3 = 27
-in_motor_fwd_4 = 22
+in1_motor_ver = 9
+in2_motor_ver = 10
+in3_motor_ver = 27
+in4_motor_ver = 22
 
-ena_a_high = 13
-ena_b_high = 25
-ena_a_low = 11
-ena_b_low = 17
+ena_horizontal = 13
+ena_vertical = 12
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
+# Define arrays
+motors = [in1_motor_hor, in2_motor_hor, in3_motor_hor, in4_motor_hor,
+          in1_motor_ver, in2_motor_ver, in3_motor_ver, in4_motor_ver]
+enable_motors = None
 
-# Setup Motors for Horizontal Movement
-for pin in [in_motor_bkd_1, in_motor_bkd_2, in_motor_bkd_3, in_motor_bkd_4, ena_a_high, ena_b_high]:
-    GPIO.setup(pin, GPIO.OUT)
-    GPIO.output(pin, GPIO.LOW)
+def setup():
+    global enable_motors
+    
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
 
-pwm_3 = GPIO.PWM(ena_a_high, 1000)
-pwm_4 = GPIO.PWM(ena_b_high, 1000)
+    for pin in motors:
+        GPIO.setup(pin, GPIO.OUT)
+        GPIO.output(pin, GPIO.LOW)
+    
+    GPIO.setup(ena_horizontal, GPIO.OUT)
+    GPIO.setup(ena_vertical, GPIO.OUT)
+    pwm_hor = GPIO.PWM(ena_horizontal, 1000)
+    pwm_ver = GPIO.PWM(ena_vertical, 1000)
+    enable_motors = [pwm_hor, pwm_ver]
 
-# Setup Motors for Vertical Movement
-for pin in [in_motor_fwd_1, in_motor_fwd_2, in_motor_fwd_3, in_motor_fwd_4, ena_a_low, ena_b_low]:
-    GPIO.setup(pin, GPIO.OUT)
-    GPIO.output(pin, GPIO.LOW)
+    for pwm in enable_motors:
+        pwm.start(0)
 
-pwm_1 = GPIO.PWM(ena_a_low, 1000)
-pwm_2 = GPIO.PWM(ena_b_low, 1000)
+# Functions that will help control the direction of movement
+def set_pins_high_except(inactive_pins=None):
+    if inactive_pins is None:
+        inactive_pins = set()
+
+    for pin in motors:
+        if pin not in inactive_pins:
+            GPIO.output(pin, GPIO.HIGH) 
+
+def set_pins_low_except(active_pins=None):
+    if active_pins is None:
+        active_pins = set()
+
+    for pin in motors:
+        if pin not in active_pins:
+            GPIO.output(pin, GPIO.LOW) 
 
 def stop_move():
     print("Halting...")
-    for pin in [in_motor_fwd_1, in_motor_fwd_2, in_motor_fwd_3, in_motor_fwd_4, 
-                in_motor_bkd_1, in_motor_bkd_2, in_motor_bkd_3, in_motor_bkd_4]:
+    # or set_pins_low_except()
+    for pin in motors:
         GPIO.output(pin, GPIO.LOW)
 
-def forward_move():
-    GPIO.output(in_motor_fwd_1, GPIO.HIGH)
-    GPIO.output(in_motor_fwd_2, GPIO.LOW)
-    GPIO.output(in_motor_fwd_3, GPIO.HIGH)
-    GPIO.output(in_motor_fwd_4, GPIO.LOW)
-    stop_move_except([in_motor_fwd_1, in_motor_fwd_3])
+def horizontal_move():
+    set_pins_low_except([in1_motor_hor, in3_motor_hor])
+    GPIO.output(in1_motor_hor, GPIO.HIGH)
+    GPIO.output(in3_motor_hor, GPIO.HIGH)
 
-def backward_move():
-    GPIO.output(in_motor_fwd_1, GPIO.LOW)
-    GPIO.output(in_motor_fwd_2, GPIO.HIGH)
-    GPIO.output(in_motor_fwd_3, GPIO.LOW)
-    GPIO.output(in_motor_fwd_4, GPIO.HIGH)
-    stop_move_except([in_motor_fwd_2, in_motor_fwd_4])
+def horizontal_rmove():
+    set_pins_low_except([in2_motor_hor, in4_motor_hor])
+    GPIO.output(in2_motor_hor, GPIO.HIGH)
+    GPIO.output(in4_motor_hor, GPIO.HIGH)
 
-def side_fwd_move():
-    GPIO.output(in_motor_bkd_1, GPIO.HIGH)
-    GPIO.output(in_motor_bkd_2, GPIO.LOW)
-    GPIO.output(in_motor_bkd_3, GPIO.HIGH)
-    GPIO.output(in_motor_bkd_4, GPIO.LOW)
-    stop_move_except([in_motor_bkd_1, in_motor_bkd_3])
+def vertical_move():
+    set_pins_low_except([in1_motor_ver, in3_motor_ver])
+    GPIO.output(in1_motor_ver, GPIO.HIGH)
+    GPIO.output(in3_motor_ver, GPIO.HIGH)
 
-def side_bkd_move():
-    GPIO.output(in_motor_bkd_1, GPIO.LOW)
-    GPIO.output(in_motor_bkd_2, GPIO.HIGH)
-    GPIO.output(in_motor_bkd_3, GPIO.LOW)
-    GPIO.output(in_motor_bkd_4, GPIO.HIGH)
-    stop_move_except([in_motor_bkd_2, in_motor_bkd_4])
+def vertical_rmove():
+    set_pins_low_except([in2_motor_ver, in4_motor_ver])
+    GPIO.output(in2_motor_ver, GPIO.HIGH)
+    GPIO.output(in4_motor_ver, GPIO.HIGH)
 
-def stop_move_except(active_pins):
-    for pin in [in_motor_fwd_1, in_motor_fwd_2, in_motor_fwd_3, in_motor_fwd_4, 
-                in_motor_bkd_1, in_motor_bkd_2, in_motor_bkd_3, in_motor_bkd_4]:
-        GPIO.output(pin, GPIO.LOW)
+# Functions that will help control the speed the of motor
+def speed_custom(value):
+    if value > 100 or value < 0:
+        print("Error: Duty Cycle must be between 0 and 100")
+        return
+
+    if enable_motors is None or not enable_motors:
+        print("Error: Motors are not initialized properly")
+        return
+    
+    for pwm in enable_motors:
+        pwm.ChangeDutyCycle(value)
+
+def speed_slow():
+    speed_custom(50)
 
 def speed_med():
-    for pwm in [pwm_1, pwm_2, pwm_3, pwm_4]:
-        pwm.ChangeDutyCycle(75)
+    speed_custom(75)
+
+def speed_high():
+    speed_custom(90)
 
 def speed_full():
-    for pwm in [pwm_1, pwm_2, pwm_3, pwm_4]:
-        pwm.ChangeDutyCycle(100)
+    speed_custom(100)
 
-def start_setup():
-    for pwm in [pwm_1, pwm_2, pwm_3, pwm_4]:
-        pwm.start(100)
-    for pin in [ena_a_low, ena_b_low, ena_a_high, ena_b_high]:
-        GPIO.output(pin, GPIO.HIGH)
-
+# Main to test the movements
 def main():
-    start_setup()
+    setup()
+    stop_move()
     speed_full()
+
     try:
         while True:
-            if keyboard.is_pressed('w'):
-                forward_move()
-            elif keyboard.is_pressed('s'):
-                backward_move()
-            elif keyboard.is_pressed('a'):
-                side_fwd_move()
-            elif keyboard.is_pressed('d'):
-                side_bkd_move()
+            if keyboard.is_pressed('w') or keyboard.is_pressed('up'):
+                horizontal_move()
+            elif keyboard.is_pressed('s') or keyboard.is_pressed('down'):
+                horizontal_rmove()
+            elif keyboard.is_pressed('a') or keyboard.is_pressed('left'):
+                vertical_move()
+            elif keyboard.is_pressed('d') or keyboard.is_pressed('right'):
+                vertical_rmove()
             elif keyboard.is_pressed('q'):
                 print("Exiting...")
                 break
@@ -122,8 +135,10 @@ def main():
 
     except KeyboardInterrupt:
         print("Interrupted by user.")
+
     finally:
         stop_move()
+        speed_custom(0)
         GPIO.cleanup()
 
 main()
