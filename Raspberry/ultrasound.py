@@ -1,6 +1,6 @@
 import keyboard
 import RPi.GPIO as GPIO
-from time import sleep
+from time import sleep, time
 
 # Define GPIO Pins
 TRIG = 27  
@@ -20,11 +20,11 @@ def measure_distance():
     GPIO.output(TRIG, False)
 
     while GPIO.input(ECHO) == 0:
-        pulse_start = time.time()
+        pulse_start = time()
 
     # Wait for the echo signal to go LOW
     while GPIO.input(ECHO) == 1:
-        pulse_end = time.time()
+        pulse_end = time()
 
 
     pulse_duration = pulse_end - pulse_start
