@@ -38,7 +38,7 @@ if __name__ == "__main__":
     try:
         while True:
             if keyboard.is_pressed('d'):
-                time = 0
+                elapsed_time = 0
                 dist = measure_distance()
                 print(f"Distance: {dist} cm")
                 time.sleep(0.2)
@@ -46,8 +46,8 @@ if __name__ == "__main__":
                 print("Exiting...")
                 break
             else:
-                time += 1
-                print(f"Waiting for input... ({time}s elapsed)", end='\r')
+                elapsed_time += 1
+                print(f"Waiting for input... ({elapsed_time}s elapsed)", end='\r')
                 time.sleep(1)
 
     except KeyboardInterrupt:
