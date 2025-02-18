@@ -3,8 +3,8 @@ import RPi.GPIO as GPIO
 from time import sleep
 
 # Define GPIO Pins
-TRIG = 23  
-ECHO = 24  
+TRIG = 27  
+ECHO = 22  
 
 # Setup GPIO Mode
 def setup_ultrasound():
@@ -14,9 +14,9 @@ def setup_ultrasound():
 
 def measure_distance():
     GPIO.output(TRIG, False)
-    time.sleep(0.1)
+    sleep(0.1)
     GPIO.output(TRIG, True)
-    time.sleep(0.00001)
+    sleep(0.00001)
     GPIO.output(TRIG, False)
 
     while GPIO.input(ECHO) == 0:
