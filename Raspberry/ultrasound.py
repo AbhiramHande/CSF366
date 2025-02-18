@@ -1,6 +1,6 @@
 import keyboard
 import RPi.GPIO as GPIO
-from time import sleep, time
+import time
 
 # Define GPIO Pins
 TRIG = 27  
@@ -14,17 +14,17 @@ def setup_ultrasound():
 
 def measure_distance():
     GPIO.output(TRIG, False)
-    sleep(0.1)
+    time.sleep(0.1)
     GPIO.output(TRIG, True)
-    sleep(0.00001)
+    time.sleep(0.00001)
     GPIO.output(TRIG, False)
 
     while GPIO.input(ECHO) == 0:
-        pulse_start = time()
+        pulse_start = time.time()
 
     # Wait for the echo signal to go LOW
     while GPIO.input(ECHO) == 1:
-        pulse_end = time()
+        pulse_end = time.time()
 
 
     pulse_duration = pulse_end - pulse_start
@@ -41,14 +41,14 @@ if __name__ == "__main__":
                 time = 0
                 dist = measure_distance()
                 print(f"Distance: {dist} cm")
-                sleep(0.2)
+                time.sleep(0.2)
             elif keyboard.is_pressed('q'):
                 print("Exiting...")
                 break
             else:
                 time += 1
                 print(f"Waiting for input... ({time}s elapsed)", end='\r')
-                sleep(1)
+                time.sleep(1)
 
     except KeyboardInterrupt:
         print("Interrupted by user.")
