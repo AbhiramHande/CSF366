@@ -1,4 +1,4 @@
-#A simple program to test whether the GPIO pins of Jetson and the L298N Motor Cards work as expected
+# Module to control the motors of the robot
 import keyboard
 import Jetson.GPIO as GPIO
 from time import sleep
@@ -109,8 +109,8 @@ def speed_high():
 def speed_full():
     speed_custom(100)
 
-# Main to test the movements
-def main():
+# Main to test the movements if directly executed
+if __name__ == "__main__":
     setup()
     stop_move()
     speed_full()
@@ -140,5 +140,3 @@ def main():
         stop_move()
         speed_custom(0)
         GPIO.cleanup()
-
-main()

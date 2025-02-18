@@ -127,7 +127,7 @@ def start_setup():
     GPIO.output(ena_b_high, GPIO.HIGH) 
 
 
-def main():
+if __name__ == "__main__":
     start_setup()
     speed_full()
     try:
@@ -152,5 +152,3 @@ def main():
         print("Interrupted by user.")
     stop_move()
     GPIO.cleanup()
-    
-main()
