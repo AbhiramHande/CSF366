@@ -59,7 +59,6 @@ def set_pins_low_except(active_pins=None):
             GPIO.output(pin, GPIO.LOW) 
 
 def stop_move():
-    print("Halting...")
     # or set_pins_low_except()
     for pin in motors:
         GPIO.output(pin, GPIO.LOW)
@@ -156,6 +155,10 @@ if __name__ == "__main__":
             elif keyboard.is_pressed('q'):
                 print("Exiting...")
                 break
+            elif keyboard.is_pressed('r'):
+                rotate_clockwise()
+            elif keyboard.is_pressed('p'):
+                rotate_anticlockwise()
             else:
                 stop_move()
 

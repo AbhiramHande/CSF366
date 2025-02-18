@@ -3,7 +3,7 @@
 # Setup system variables
 SSID="wifi_name"
 PASSWORD="wifi_password"
-REPO_PATH="/home/inspire/Documents/Project/CSF366"
+REPO_PATH="/home/inspire/Documents/Project/source_code"
 IP_FILE="ip_address.txt"
 
 # Enable SSH
@@ -35,8 +35,8 @@ if [ ! -d "$REPO_PATH" ]; then
 else
     cd "$REPO_PATH"
     mkdir -p tmp
-    echo "$IP_ADDR" > tmp/$IP_FILE
-    git add tmp/$IP_FILE
+    echo "$IP_ADDR" > "tmp/$IP_FILE"
+    git add "tmp/$IP_FILE"
     git commit -m "Update IP Address"
     git push origin main
 
