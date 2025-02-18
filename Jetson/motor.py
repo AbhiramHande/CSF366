@@ -84,6 +84,34 @@ def vertical_rmove():
     GPIO.output(in2_motor_ver, GPIO.HIGH)
     GPIO.output(in4_motor_ver, GPIO.HIGH)
 
+# Angle is defined in degrees for simplicity
+def rotate_clockwise(angle=None):
+    active_pins = [in1_motor_hor, in4_motor_hor, in1_motor_ver, in4_motor_ver]
+    set_pins_low_except(active_pins)
+    for pin in active_pins:
+        GPIO.output(pin, GPIO.HIGH)
+    
+    if angle is None:
+        return
+    else:
+        sleep(0.1) #TODO Calculate and change accordingly
+        stop_move
+        return
+        
+
+def rotate_anticlockwise(angle=None):
+    active_pins = [in2_motor_hor, in3_motor_hor, in2_motor_ver, in3_motor_ver]
+    set_pins_low_except(active_pins)
+    for pin in active_pins:
+        GPIO.output(pin, GPIO.HIGH)
+    
+    if angle is None:
+        return
+    else:
+        sleep(0.1) #TODO Calculate and change accordingly
+        stop_move
+        return
+
 # Functions that will help control the speed the of motor
 def speed_custom(value):
     if value > 100 or value < 0:
