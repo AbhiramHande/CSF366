@@ -34,7 +34,7 @@ def measure_distance():
 # Test the sensors if directly run
 if __name__ == "__main__":
     setup_ultrasound()
-    time = 0
+    elapsed_time = 0
     try:
         while True:
             if keyboard.is_pressed('d'):
