@@ -14,8 +14,8 @@ in2_motor_ver = 10
 in3_motor_ver = 27
 in4_motor_ver = 22
 
-ena_horizontal = 13
-ena_vertical = 12
+ena_horizontal = 13 # Connected to 13 and -
+ena_vertical = 12 # Connected to 11 and 17
 
 # Define arrays
 motors = [in1_motor_hor, in2_motor_hor, in3_motor_hor, in4_motor_hor,
