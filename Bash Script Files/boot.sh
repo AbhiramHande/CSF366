@@ -41,7 +41,7 @@ get_and_save_ip() {
 
     # Write IP to file
     mkdir -p  "$REPO_PATH"/tmp
-    echo "$IP" > "$REPO_PATH"/tmp/"$OUTPUT_FILE"
+    echo "$IP" > "$REPO_PATH"/tmp/"$IP_FILE"
 }
 
 # Function to git push
