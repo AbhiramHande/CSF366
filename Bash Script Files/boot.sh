@@ -5,6 +5,7 @@ SSID="wifi_name"
 PASSWORD="wifi_password"
 REPO_PATH="/home/inspire/Documents/Project/source_code"
 IP_FILE="ip_address.txt"
+DUMP_FILE="/home/inspire/Desktop/dump.txt"
 
 git_pull(){
     cd "$REPO_PATH" || exit 1
@@ -17,16 +18,16 @@ git_pull(){
 connect_wifi() {
     nmcli device wifi rescan
     if ! nmcli device wifi list | grep -q $SSID; then
-        echo "SSID not found" >> "$REPO_PATH"/tmp/dump.txt
+        echo "SSID not found" >> "$DUMP_FILE"
         exit 1
     fi
     
     if ! nmcli dev wifi connect "$SSID" password "$PASSWORD"; then
-        echo "Connection failed" >> "$REPO_PATH"/tmp/dump.txt
+        echo "Connection failed" >> "$DUMP_FILE"
         exit 1
     fi
 
-    echo "Successfully connected to WiFi" >> "$REPO_PATH"/tmp/dump.txt
+    echo "Successfully connected to WiFi" >> "$DUMP_FILE"
 }
 
 # Function to get and save IP
@@ -39,6 +40,7 @@ get_and_save_ip() {
     done
 
     # Write IP to file
+    mkdir -p  "$REPO_PATH"/tmp
     echo "$IP" > "$REPO_PATH"/tmp/"$OUTPUT_FILE"
 }
 
@@ -47,15 +49,15 @@ git_push() {
     cd $REPO_PATH || exit 1
     git config --global user.name "Jetson Auto Committer"
     git config --global user.email "auto@example.com"
-    git add $OUTPUT_FILE
+    git add .
     git commit -m "Automatic IP update: $(date)"
     git push origin main
 }
 
 # Main execution
-git_pull
-> "$REPO_PATH"/tmp/dump.txt
+> "$DUMP_FILE"
 touch /boot/ssh
 connect_wifi
+git_pull
 get_and_save_ip
-git_update
+git_push
