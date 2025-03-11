@@ -1,11 +1,13 @@
 #!/bin/bash
 
-# Setup system variables
 SSID="wifi_name"
 PASSWORD="wifi_password"
 REPO_PATH="/home/inspire/Documents/Project/source_code"
 IP_FILE="ip_address.txt"
 DUMP_FILE="/home/inspire/Desktop/dump.txt"
+SSH_KEY="/home/inspire/.ssh/jetson_project"
+GIT_NAME="Jetson IP Updater"
+GIT_EMAIL="jetson@example.com"
 
 git_pull(){
     cd "$REPO_PATH" || exit 1
@@ -47,11 +49,11 @@ get_and_save_ip() {
 # Function to git push
 git_push() {
     cd $REPO_PATH || exit 1
-    git config --global user.name "Jetson Auto Committer"
-    git config --global user.email "auto@example.com"
+    git config --global user.name "$GIT_NAME"
+    git config --global user.email "$GIT_EMAIL"
     git add .
-    git commit -m "Automatic IP update: $(date)"
-    git push origin main
+    git commit -m "IP Update: $(date +'%Y-%m-%d %H:%M:%S')"
+    GIT_SSH_COMMAND="ssh -i $SSH_KEY -o IdentitiesOnly=yes" git push origin main
 }
 
 # Main execution
