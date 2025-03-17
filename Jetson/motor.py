@@ -4,18 +4,18 @@ import Jetson.GPIO as GPIO
 from time import sleep
 
 # Define GPIO pins
-in1_motor_hor = 24
-in2_motor_hor = 23
-in3_motor_hor = 26
-in4_motor_hor = 19
+in1_motor_hor = 24          #Physical pin 18
+in2_motor_hor = 23          #Physical pin 16
+in3_motor_hor = 26          #Physical pin 37
+in4_motor_hor = 19          #Physical pin 35
 
-in1_motor_ver = 9
-in2_motor_ver = 10
-in3_motor_ver = 27
-in4_motor_ver = 22
+in1_motor_ver = 9           #Physical pin 21
+in2_motor_ver = 10          #Physical pin 19
+in3_motor_ver = 27          #Physical pin 13
+in4_motor_ver = 22          #Physical pin 15
 
-ena_horizontal = 13 # Connected to 13 and -
-ena_vertical = 12 # Connected to 11 and 17
+ena_horizontal = 13 # Connected to 13 and - Physical pin 33
+ena_vertical = 12 # Connected to 11 and 17 - Physical pin 32
 
 # Define arrays
 motors = [in1_motor_hor, in2_motor_hor, in3_motor_hor, in4_motor_hor,
