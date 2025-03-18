@@ -3,8 +3,8 @@ import Jetson.GPIO as GPIO
 from time import sleep, time
 
 # Define GPIO Pins
-TRIG = 27  
-ECHO = 22  
+TRIG = 21           #Physical pin 40
+ECHO = 20           #Physical pin 38
 
 # Setup GPIO Mode
 def setup_ultrasound():
