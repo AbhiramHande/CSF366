@@ -23,13 +23,12 @@ ena_vertical = 12           # Connected to 11 and 17 - Physical pin 32
 # Define arrays
 motors = [in1_motor_hor, in2_motor_hor, in3_motor_hor, in4_motor_hor,
           in1_motor_ver, in2_motor_ver, in3_motor_ver, in4_motor_ver]
-enable_motors = None
+enable_motors = []
 pwm_hor = None
 pwm_ver = None
 
 def setup():
-    global enable_motors
-    global pwm_hor, pwm_ver
+    global enable_motors, pwm_hor, pwm_ver
     
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
