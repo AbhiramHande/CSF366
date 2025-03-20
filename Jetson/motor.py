@@ -14,8 +14,8 @@ in2_motor_ver = 10          #Physical pin 19
 in3_motor_ver = 27          #Physical pin 13
 in4_motor_ver = 22          #Physical pin 15
 
-ena_horizontal = 13 # Connected to 13 and - Physical pin 33
-ena_vertical = 12 # Connected to 11 and 17 - Physical pin 32
+ena_horizontal = 13         # Connected to 13 and - Physical pin 33
+ena_vertical = 12           # Connected to 11 and 17 - Physical pin 32
 
 # Define arrays
 motors = [in1_motor_hor, in2_motor_hor, in3_motor_hor, in4_motor_hor,
@@ -142,32 +142,44 @@ if __name__ == "__main__":
     stop_move()
     speed_full()
 
-    try:
-        while True:
-            if keyboard.is_pressed('w') or keyboard.is_pressed('up'):
-                horizontal_move()
-            elif keyboard.is_pressed('s') or keyboard.is_pressed('down'):
-                horizontal_rmove()
-            elif keyboard.is_pressed('a') or keyboard.is_pressed('left'):
-                vertical_move()
-            elif keyboard.is_pressed('d') or keyboard.is_pressed('right'):
-                vertical_rmove()
-            elif keyboard.is_pressed('q'):
-                print("Exiting...")
-                break
-            elif keyboard.is_pressed('r'):
-                rotate_clockwise()
-            elif keyboard.is_pressed('p'):
-                rotate_anticlockwise()
-            else:
-                stop_move()
+    # try:
+    #     while True:
+    #         if keyboard.is_pressed('w') or keyboard.is_pressed('up'):
+    #             horizontal_move()
+    #         elif keyboard.is_pressed('s') or keyboard.is_pressed('down'):
+    #             horizontal_rmove()
+    #         elif keyboard.is_pressed('a') or keyboard.is_pressed('left'):
+    #             vertical_move()
+    #         elif keyboard.is_pressed('d') or keyboard.is_pressed('right'):
+    #             vertical_rmove()
+    #         elif keyboard.is_pressed('q'):
+    #             print("Exiting...")
+    #             break
+    #         elif keyboard.is_pressed('r'):
+    #             rotate_clockwise()
+    #         elif keyboard.is_pressed('p'):
+    #             rotate_anticlockwise()
+    #         else:
+    #             stop_move()
 
-            sleep(0.2)
+    #         sleep(0.2)
 
-    except KeyboardInterrupt:
-        print("Interrupted by user.")
+    # except KeyboardInterrupt:
+    #     print("Interrupted by user.")
 
-    finally:
-        stop_move()
-        speed_custom(0)
-        GPIO.cleanup()
+    # finally:
+    #     stop_move()
+    #     speed_custom(0)
+    #     GPIO.cleanup()
+
+    horizontal_move()
+    sleep(5)
+    vertical_move()
+    sleep(5)
+    horizontal_rmove(5)
+    sleep(5)
+    vertical_rmove(5)
+    sleep(5)
+    stop_move()
+    speed_custom(0)
+    GPIO.cleanup()
