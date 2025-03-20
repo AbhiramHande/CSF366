@@ -147,8 +147,8 @@ if __name__ == "__main__":
     setup()
     stop_move()
     speed_full()
-    GPIO.output(ena_horizontal, GPIO.HIGH)
-    GPIO.output(ena_vertical, GPIO.HIGH)
+    # GPIO.output(ena_horizontal, GPIO.HIGH)
+    # GPIO.output(ena_vertical, GPIO.HIGH)
 
     try:
         while True:
