@@ -40,12 +40,12 @@ def setup():
     
     GPIO.setup(ena_horizontal, GPIO.OUT)
     GPIO.setup(ena_vertical, GPIO.OUT)
-    # pwm_hor = GPIO.PWM(ena_horizontal, 1000)
-    # pwm_ver = GPIO.PWM(ena_vertical, 1000)
-    # enable_motors = [pwm_hor, pwm_ver]
+    pwm_hor = GPIO.PWM(ena_horizontal, 1000)
+    pwm_ver = GPIO.PWM(ena_vertical, 1000)
+    enable_motors = [pwm_hor, pwm_ver]
 
-    # for pwm in enable_motors:
-    #     pwm.start(0)
+    for pwm in enable_motors:
+        pwm.start(100)
 
 # Functions that will help control the direction of movement
 def set_pins_high_except(inactive_pins=None):
@@ -146,23 +146,19 @@ def speed_full():
 if __name__ == "__main__":
     setup()
     stop_move()
-    #speed_full()
+    speed_full()
     GPIO.output(ena_horizontal, GPIO.HIGH)
     GPIO.output(ena_vertical, GPIO.HIGH)
 
     try:
         while True:
             if keyboard.is_pressed('w') or keyboard.is_pressed('up'):
-                #speed_med()
                 horizontal_move()
             elif keyboard.is_pressed('s') or keyboard.is_pressed('down'):
-                #speed_slow()
                 horizontal_rmove()
             elif keyboard.is_pressed('a') or keyboard.is_pressed('left'):
-                #speed_full()
                 vertical_move()
             elif keyboard.is_pressed('d') or keyboard.is_pressed('right'):
-                #speed_custom(20)
                 vertical_rmove()
             elif keyboard.is_pressed('q'):
                 print("Exiting...")
