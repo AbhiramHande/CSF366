@@ -151,12 +151,16 @@ if __name__ == "__main__":
     try:
         while True:
             if keyboard.is_pressed('w') or keyboard.is_pressed('up'):
+                speed_med()
                 horizontal_move()
             elif keyboard.is_pressed('s') or keyboard.is_pressed('down'):
+                speed_slow()
                 horizontal_rmove()
             elif keyboard.is_pressed('a') or keyboard.is_pressed('left'):
+                speed_full()
                 vertical_move()
             elif keyboard.is_pressed('d') or keyboard.is_pressed('right'):
+                speed_custom(20)
                 vertical_rmove()
             elif keyboard.is_pressed('q'):
                 print("Exiting...")
