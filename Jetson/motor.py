@@ -190,4 +190,6 @@ if __name__ == "__main__":
     rotate_clockwise()
     sleep(5)
     stop_move()
+    GPIO.output(ena_horizontal, GPIO.LOW)
+    GPIO.output(ena_vertical, GPIO.LOW)
     GPIO.cleanup()
