@@ -189,3 +189,5 @@ if __name__ == "__main__":
     sleep(10)
     rotate_clockwise()
     sleep(5)
+    stop_move()
+    GPIO.cleanup()
