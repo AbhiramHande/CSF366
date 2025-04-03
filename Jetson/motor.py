@@ -149,32 +149,39 @@ if __name__ == "__main__":
     # GPIO.output(ena_horizontal, GPIO.HIGH)
     # GPIO.output(ena_vertical, GPIO.HIGH)
 
-    try:
-        while True:
-            if keyboard.is_pressed('w') or keyboard.is_pressed('up'):
-                horizontal_move()
-            elif keyboard.is_pressed('s') or keyboard.is_pressed('down'):
-                horizontal_rmove()
-            elif keyboard.is_pressed('a') or keyboard.is_pressed('left'):
-                vertical_move()
-            elif keyboard.is_pressed('d') or keyboard.is_pressed('right'):
-                vertical_rmove()
-            elif keyboard.is_pressed('q'):
-                print("Exiting...")
-                break
-            elif keyboard.is_pressed('r'):
-                rotate_clockwise()
-            elif keyboard.is_pressed('p'):
-                rotate_anticlockwise()
-            else:
-                stop_move()
+    # try:
+    #     while True:
+    #         if keyboard.is_pressed('w') or keyboard.is_pressed('up'):
+    #             horizontal_rmove()
+    #         elif keyboard.is_pressed('s') or keyboard.is_pressed('down'):
+    #             horizontal_move()
+    #         elif keyboard.is_pressed('a') or keyboard.is_pressed('left'):
+    #             vertical_rmove()
+    #         elif keyboard.is_pressed('d') or keyboard.is_pressed('right'):
+    #             vertical_move()
+    #         elif keyboard.is_pressed('q'):
+    #             print("Exiting...")
+    #             break
+    #         elif keyboard.is_pressed('r'):
+    #             rotate_clockwise()
+    #         elif keyboard.is_pressed('p'):
+    #             rotate_anticlockwise()
+    #         else:
+    #             stop_move()
 
-            sleep(0.05)
+    #         sleep(0.05)
 
-    except KeyboardInterrupt:
-        print("Interrupted by user.")
+    # except KeyboardInterrupt:
+    #     print("Interrupted by user.")
 
-    finally:
-        stop_move()
-        speed_custom(0)
-        GPIO.cleanup()
+    # finally:
+    #     stop_move()
+    #     speed_custom(0)
+    #     GPIO.cleanup()
+
+    horizontal_rmove()
+    sleep(10)
+    vertical_rmove()
+    sleep(10)
+    rotate_clockwise()
+    sleep(5)
