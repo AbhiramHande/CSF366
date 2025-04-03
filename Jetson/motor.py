@@ -28,7 +28,7 @@ pwm_hor = None
 pwm_ver = None
 
 def setup():
-    global enable_motors, pwm_hor, pwm_ver
+    #global enable_motors, pwm_hor, pwm_ver
     
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
@@ -36,15 +36,19 @@ def setup():
     for pin in motors:
         GPIO.setup(pin, GPIO.OUT)
         GPIO.output(pin, GPIO.LOW)
-    
-    GPIO.setup(ena_horizontal, GPIO.OUT)
-    GPIO.setup(ena_vertical, GPIO.OUT)
-    pwm_hor = GPIO.PWM(ena_horizontal, 1000)
-    pwm_ver = GPIO.PWM(ena_vertical, 1000)
-    enable_motors = [pwm_hor, pwm_ver]
 
-    for pwm in enable_motors:
-        pwm.start(100)
+    GPIO.setup(ena_horizontal, GPIO.OUT)
+    GPIO.output(ena_horizontal, GPIO.LOW)
+    GPIO.setup(ena_vertical, GPIO.OUT)
+    GPIO.output(ena_horizontal, GPIO.HIGH)
+    # GPIO.setup(ena_horizontal, GPIO.OUT)
+    # GPIO.setup(ena_vertical, GPIO.OUT)
+    # pwm_hor = GPIO.PWM(ena_horizontal, 1000)
+    # pwm_ver = GPIO.PWM(ena_vertical, 1000)
+    # enable_motors = [pwm_hor, pwm_ver]
+
+    # for pwm in enable_motors:
+    #     pwm.start(100)
 
 # Functions that will help control the direction of movement
 def set_pins_high_except(inactive_pins=None):
@@ -145,9 +149,9 @@ def speed_full():
 if __name__ == "__main__":
     setup()
     stop_move()
-    speed_full()
-    # GPIO.output(ena_horizontal, GPIO.HIGH)
-    # GPIO.output(ena_vertical, GPIO.HIGH)
+    # speed_full()
+    GPIO.output(ena_horizontal, GPIO.HIGH)
+    GPIO.output(ena_vertical, GPIO.HIGH)
 
     # try:
     #     while True:
