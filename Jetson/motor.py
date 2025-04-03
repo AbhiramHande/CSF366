@@ -73,24 +73,24 @@ def stop_move():
         GPIO.output(pin, GPIO.LOW)
 
 def horizontal_move():
-    set_pins_low_except([in1_motor_hor, in3_motor_hor])
+    set_pins_low_except([in1_motor_hor, in4_motor_hor])
     GPIO.output(in1_motor_hor, GPIO.HIGH)
-    GPIO.output(in3_motor_hor, GPIO.HIGH)
-
-def horizontal_rmove():
-    set_pins_low_except([in2_motor_hor, in4_motor_hor])
-    GPIO.output(in2_motor_hor, GPIO.HIGH)
     GPIO.output(in4_motor_hor, GPIO.HIGH)
 
+def horizontal_rmove():
+    set_pins_low_except([in2_motor_hor, in3_motor_hor])
+    GPIO.output(in2_motor_hor, GPIO.HIGH)
+    GPIO.output(in3_motor_hor, GPIO.HIGH)
+
 def vertical_move():
-    set_pins_low_except([in1_motor_ver, in3_motor_ver])
+    set_pins_low_except([in1_motor_ver, in4_motor_ver])
     GPIO.output(in1_motor_ver, GPIO.HIGH)
-    GPIO.output(in3_motor_ver, GPIO.HIGH)
+    GPIO.output(in4_motor_ver, GPIO.HIGH)
 
 def vertical_rmove():
-    set_pins_low_except([in2_motor_ver, in4_motor_ver])
+    set_pins_low_except([in2_motor_ver, in3_motor_ver])
     GPIO.output(in2_motor_ver, GPIO.HIGH)
-    GPIO.output(in4_motor_ver, GPIO.HIGH)
+    GPIO.output(in3_motor_ver, GPIO.HIGH)
 
 # Angle is defined in degrees for simplicity
 def rotate_clockwise(angle=None):
