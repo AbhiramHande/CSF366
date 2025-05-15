@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 class Robot:
     _instance = None
@@ -57,12 +58,54 @@ class Robot:
         self.dir_facing = rotate_vector(self.dir_facing)
         self.dir_left = rotate_vector(self.dir_left)
         self._round_values()
-        
+
     def rotate_clockwise(self, angle_deg):
         self._rotate(angle_deg)
 
     def rotate_anticlockwise(self, angle_deg):
         self._rotate(-angle_deg)
+
+    def _get_nearest_wall_coord(self, direction, room_corners):
+
+        def intersect(p, r, q, s):
+            """Returns intersection point of ray p + t*r and segment q to q+s if it exists."""
+            r_cross_s = r[0] * s[1] - r[1] * s[0]
+            if r_cross_s == 0:
+                return None  # Parallel lines
+
+            qp = [q[0] - p[0], q[1] - p[1]]
+            t = (qp[0] * s[1] - qp[1] * s[0]) / r_cross_s
+            u = (qp[0] * r[1] - qp[1] * r[0]) / r_cross_s
+
+            if t >= 0 and 0 <= u <= 1:
+                return [p[0] + t * r[0], p[1] + t * r[1]]
+            return None
+
+        pos = self.position
+        ray = direction
+        min_dist = float('inf')
+        closest_point = None
+
+        n = len(room_corners)
+        for i in range(n):
+            p1 = room_corners[i]
+            p2 = room_corners[(i + 1) % n]
+            seg = [p2[0] - p1[0], p2[1] - p1[1]]
+            hit = intersect(pos, ray, p1, seg)
+            if hit:
+                dist = (hit[0] - pos[0])**2 + (hit[1] - pos[1])**2
+                if dist < min_dist:
+                    min_dist = dist
+                    closest_point = hit
+
+        return closest_point
+    
+    def get_forward_wall(self, room_corners):
+        self._get_nearest_wall_coord(self.dir_facing, room_corners)
+
+    def get_side_wall(self, room_corners):
+        self._get_nearest_wall_coord(self.dir_left, room_corners)
+
 
 # Singleton instance
 robot = Robot()

@@ -1,5 +1,6 @@
 import sys
 import time
+import math
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -8,7 +9,13 @@ from sim_robot import Robot
 window_width, window_height = 800, 800
 room_corners = []
 delta_time = 1/24
+
 robot = Robot()
+robot.set_speed(25)
+
+pulse_radius = 10.0
+pulse_increasing = True
+target_point = None
 
 def load_room(filename="room.txt"):
     global room_corners
@@ -18,7 +25,7 @@ def load_room(filename="room.txt"):
             room_corners.append((x, y))
 
 def draw_grid():
-    glColor3f(0.8, 0.8, 0.8)
+    glColor3f(0.3, 0.3, 0.3)
     glLineWidth(1)
     glBegin(GL_LINES)
     for i in range(-600, 601, 50):
@@ -56,6 +63,21 @@ def draw_robot():
     glVertex2f(*right)
     glEnd()
 
+def draw_pulsating_circle():
+    if not target_point:
+        return
+
+    glColor3f(1.0, 1.0, 0.0)
+    glLineWidth(2)
+    glBegin(GL_LINE_LOOP)
+    segments = 50
+    for i in range(segments):
+        theta = 2 * math.pi * i / segments
+        x = target_point[0] + pulse_radius * math.cos(theta)
+        y = target_point[1] + pulse_radius * math.sin(theta)
+        glVertex2f(x, y)
+    glEnd()
+
 def draw_path():
     glColor3f(0.0, 1.0, 0.0)
     glPointSize(3)
@@ -70,6 +92,7 @@ def display():
     draw_room()
     draw_path()
     draw_robot()
+    draw_pulsating_circle()
     glutSwapBuffers()
 
 def reshape(w, h):
@@ -80,12 +103,26 @@ def reshape(w, h):
     glMatrixMode(GL_MODELVIEW)
 
 def update(value):
+    global target_point, pulse_radius, pulse_increasing
+
     robot.move_horizontal(delta_time)
-    if len(robot.path) % 60 == 0:
+    if len(robot.path) % 120 == 0:
         robot.rotate_clockwise(45)
+
+    # Find nearest wall point along facing direction
+    target_point = robot.get_nearest_wall_coord(robot.dir_facing, room_corners)
+
+    # Update pulse
+    if pulse_increasing:
+        pulse_radius += 0.5
+        if pulse_radius > 20: pulse_increasing = False
+    else:
+        pulse_radius -= 0.5
+        if pulse_radius < 10: pulse_increasing = True
 
     glutPostRedisplay()
     glutTimerFunc(int(delta_time * 1000), update, 0)
+
 
 def main():
     glutInit(sys.argv)
@@ -95,7 +132,7 @@ def main():
     glutCreateWindow(b"2D Robot Simulation")
 
     load_room()
-    glClearColor(1.0, 1.0, 1.0, 1.0)
+    glClearColor(0.0, 0.0, 0.0, 1.0)
     glutDisplayFunc(display)
     glutReshapeFunc(reshape)
     glutTimerFunc(0, update, 0)
