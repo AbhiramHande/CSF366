@@ -14,52 +14,36 @@ class Robot:
         self.speed = 5.0
         self.dir_facing = [1.0, 0.0]
         self.dir_left = [0.0, -1.0]
+        self.path = [[0.0, 0.0]]
 
     # Helper function to round all values up to 4 decimal digits
     def _round_values(self):
-        self.position[0] = round(self.position[0], 4)
-        self.position[1] = round(self.position[1], 4)
-        self.dir_facing[0] = round(self.dir_facing[0], 4)
-        self.dir_facing[1] = round(self.dir_facing[1], 4)
-        self.dir_left[0] = round(self.dir_left[0], 4)
-        self.dir_left[1] = round(self.dir_left[1], 4)
+        self.position = [round(x, 4) for x in self.position]
+        self.dir_facing = [round(x, 4) for x in self.dir_facing]
+        self.dir_left = [round(x, 4) for x in self.dir_left]
 
     def set_speed(self, value):
         self.speed = value
 
-    def move_horizontal(self, time):
-        dx = self.dir_facing[0] * self.speed * time
-        dy = self.dir_facing[1] * self.speed * time
+    def _move(self, direction, time):
+        dx = direction[0] * self.speed * time
+        dy = direction[1] * self.speed * time
         self.position[0] += dx
         self.position[1] += dy
         self._round_values()
+        self.path.append(list(self.position))
+
+    def move_horizontal(self, time):
+        self._move(self.dir_facing, time)
 
     def move_rhorizontal(self, time):
-        dx = -self.dir_facing[0] * self.speed * time
-        dy = -self.dir_facing[1] * self.speed * time
-        self.position[0] += dx
-        self.position[1] += dy
-        self._round_values()
+        self._move([-x for x in self.dir_facing], time)
 
     def move_vertical(self, time):
-        dx = self.dir_left[0] * self.speed * time
-        dy = self.dir_left[1] * self.speed * time
-        self.position[0] += dx
-        self.position[1] += dy
-        self._round_values()
+        self._move(self.dir_left, time)
 
     def move_rvertical(self, time):
-        dx = -self.dir_left[0] * self.speed * time
-        dy = -self.dir_left[1] * self.speed * time
-        self.position[0] += dx
-        self.position[1] += dy
-        self._round_values()
-
-    def rotate_clockwise(self, angle_deg):
-        self._rotate(angle_deg)
-
-    def rotate_anticlockwise(self, angle_deg):
-        self._rotate(-angle_deg)
+        self._move([-x for x in self.dir_left], time)
 
     def _rotate(self, angle_deg):
         angle_rad = math.radians(angle_deg)
@@ -73,6 +57,12 @@ class Robot:
         self.dir_facing = rotate_vector(self.dir_facing)
         self.dir_left = rotate_vector(self.dir_left)
         self._round_values()
+        
+    def rotate_clockwise(self, angle_deg):
+        self._rotate(angle_deg)
+
+    def rotate_anticlockwise(self, angle_deg):
+        self._rotate(-angle_deg)
 
 # Singleton instance
 robot = Robot()
