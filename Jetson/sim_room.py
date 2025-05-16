@@ -11,11 +11,19 @@ room_corners = []
 delta_time = 1/24
 
 robot = Robot()
-robot.set_speed(25)
+robot.set_speed(50)
 
+MAX_DISTANCE = 400
+MIN_DISTANCE = 50
+
+state = 2
 pulse_radius = 10.0
 pulse_increasing = True
 target_point = None
+forward_dist = float('inf')
+left_dist = float('inf')
+extra_dist = 0
+extra_dir = None
 
 def load_room(filename="room.txt"):
     global room_corners
@@ -103,22 +111,101 @@ def reshape(w, h):
     glMatrixMode(GL_MODELVIEW)
 
 def update(value):
-    global target_point, pulse_radius, pulse_increasing
+    global pulse_radius, pulse_increasing, target_point, state, forward_dist, left_dist, extra_dist, extra_dir
 
-    robot.move_horizontal(delta_time)
-    if len(robot.path) % 120 == 0:
-        robot.rotate_clockwise(45)
+    def distance_fwd():
+        point = robot.get_forward_wall(room_corners)
+        if not point:
+            return float('inf'), None
+        dx = point[0] - robot.position[0]
+        dy = point[1] - robot.position[1]
+        return math.hypot(dx, dy), point
+    
+    def distance_left():
+        point = robot.get_side_wall(room_corners)
+        if not point:
+            return float('inf'), None
+        dx = point[0] - robot.position[0]
+        dy = point[1] - robot.position[1]
+        return math.hypot(dx, dy), point
 
-    # Find nearest wall point along facing direction
-    target_point = robot.get_nearest_wall_coord(robot.dir_facing, room_corners)
-
-    # Update pulse
+    # Pulsating circle update
     if pulse_increasing:
         pulse_radius += 0.5
         if pulse_radius > 20: pulse_increasing = False
     else:
         pulse_radius -= 0.5
         if pulse_radius < 10: pulse_increasing = True
+
+    # Get directions
+    dir_f = robot.dir_facing
+    dir_l = [-dir_f[1], dir_f[0]]  # 90° anticlockwise from front
+
+    if state == 2:
+        forward_dist, nearest_f = distance_fwd()
+        left_dist, nearest_l = distance_left()
+        if forward_dist < MAX_DISTANCE:
+            state = 5
+        elif left_dist < MAX_DISTANCE:
+            state = 1
+        else:
+            state = 4  # default to 4a
+        target_point = nearest_f if forward_dist < MAX_DISTANCE else None
+
+    elif state == 1:
+        robot.rotate_clockwise(90)
+        state = 5
+
+    elif state == 4:
+        robot.move_horizontal(delta_time)
+        state = 2
+
+    elif state == 5:
+        robot.move_horizontal(delta_time)
+        forward_dist, nearest_f = distance_fwd()
+        left_dist, nearest_l = distance_left()
+        if forward_dist < MIN_DISTANCE:
+            state = 8
+        target_point = nearest_f if forward_dist < MAX_DISTANCE else None
+
+    elif state == 8:
+        robot.rotate_clockwise(90)
+        state = 9
+
+    elif state == 9:
+        robot.move_horizontal(delta_time)
+        forward_dist, nearest_f = distance_fwd()
+        left_dist, nearest_l = distance_left()
+        if forward_dist < MIN_DISTANCE:
+            state = 8
+        else:
+            state = 12
+        target_point = nearest_f if forward_dist < MAX_DISTANCE else None
+
+    elif state == 12:
+        if left_dist > 2 * MIN_DISTANCE:
+            state = 13
+        else:
+            state = 9
+
+    elif state == 13:
+        extra_dist = MIN_DISTANCE
+        extra_dir = "fwd"
+        state = 14
+    
+    elif state == 14:
+        if extra_dir == "fwd" and extra_dist > 0:
+            robot.move_horizontal(delta_time)
+            extra_dist -= robot.speed * delta_time
+        elif extra_dir == "fwd":
+            extra_dir = "side"
+            extra_dist = MIN_DISTANCE + 5
+        elif extra_dir == "side" and extra_dist > 0:
+            robot.move_vertical(delta_time)
+            extra_dist -= robot.speed * delta_time
+        else:
+            robot.rotate_anticlockwise(90)
+            state = 9
 
     glutPostRedisplay()
     glutTimerFunc(int(delta_time * 1000), update, 0)

@@ -101,10 +101,10 @@ class Robot:
         return closest_point
     
     def get_forward_wall(self, room_corners):
-        self._get_nearest_wall_coord(self.dir_facing, room_corners)
+        return self._get_nearest_wall_coord(self.dir_facing, room_corners)
 
     def get_side_wall(self, room_corners):
-        self._get_nearest_wall_coord(self.dir_left, room_corners)
+        return self._get_nearest_wall_coord(self.dir_left, room_corners)
 
 
 # Singleton instance
