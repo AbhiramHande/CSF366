@@ -7,51 +7,79 @@ from OpenGL.GLU import *
 from sim_robot import Robot
 
 window_width, window_height = 800, 800
-room_corners = []
 delta_time = 1/24
+
+room_corners = []
+room_bounds = {'min': (0, 0), 'max': (0, 0)}
 
 robot = Robot()
 robot.set_speed(50)
+target_value = 0
+target_index = None
 
 MAX_DISTANCE = 400
 MIN_DISTANCE = 50
 
-state = 2
 pulse_radius = 10.0
 pulse_increasing = True
 target_point = None
+
+state = 2
 forward_dist = float('inf')
 left_dist = float('inf')
 extra_dist = 0
 extra_dir = None
 
-def load_room(filename="room.txt"):
-    global room_corners
+def load_room(filename="maze.txt"):
+    global room_corners, room_bounds, robot, target_value, target_index
+    room_corners.clear()
+
     with open(filename, 'r') as f:
-        for line in f:
+        lines = f.readlines()
+
+    x_min, y_min = map(float, lines[0].strip().split())
+    x_max, y_max = map(float, lines[1].strip().split())
+    room_bounds['min'] = (x_min, y_min)
+    room_bounds['max'] = (x_max, y_max)
+
+    x_c, y_c = map(float, lines[3].strip().split())
+    robot.position[0] = x_c
+    robot.position[1] = y_c
+    
+    target_index, target_value = map(float, lines[4].strip().split())
+    target_index = int(target_index)
+    for line in lines[5:]:
+        if line.strip():
             x, y = map(float, line.strip().split())
             room_corners.append((x, y))
 
 def draw_grid():
     glColor3f(0.3, 0.3, 0.3)
     glLineWidth(1)
-    glBegin(GL_LINES)
-    for i in range(-600, 601, 50):
-        # Vertical lines
-        glVertex2f(i, -600)
-        glVertex2f(i, 600)
 
-        # Horizontal lines
-        glVertex2f(-600, i)
-        glVertex2f(600, i)
+    x_min, y_min = room_bounds['min']
+    x_max, y_max = room_bounds['max']
+
+    glBegin(GL_LINES)
+    step = 50
+
+    for i in range(int(x_min) - 100, int(x_max) + 101, step):
+        glVertex2f(i, y_min - 100)
+        glVertex2f(i, y_max + 100)
+
+    for j in range(int(y_min) - 100, int(y_max) + 101, step):
+        glVertex2f(x_min - 100, j)
+        glVertex2f(x_max + 100, j)
+
     glEnd()
 
 def draw_room():
     glColor3f(0.2, 0.4, 0.8)
     glLineWidth(3)
-    glBegin(GL_LINE_LOOP)
-    for x, y in room_corners:
-        glVertex2f(x, y)
+    glBegin(GL_LINES)
+    for i in range(0, len(room_corners) - 1):
+        glVertex2f(*room_corners[i])
+        glVertex2f(*room_corners[i + 1])
     glEnd()
 
 def draw_robot():
@@ -107,11 +135,24 @@ def reshape(w, h):
     glViewport(0, 0, w, h)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    gluOrtho2D(-600, 600, -600, 600)
+    x_min, y_min = room_bounds['min']
+    x_max, y_max = room_bounds['max']
+    margin = 100  # Add some margin
+    gluOrtho2D(x_min - margin, x_max + margin, y_min - margin, y_max + margin)
     glMatrixMode(GL_MODELVIEW)
+
+def stop_animation(value):
+    
+    glutDestroyWindow(glutGetWindow())
 
 def update(value):
     global pulse_radius, pulse_increasing, target_point, state, forward_dist, left_dist, extra_dist, extra_dir
+
+    if robot.position[target_index] > target_value:
+        print("Target reached, exiting simulation.")
+        time.sleep(5)
+        glutLeaveMainLoop()
+        glutTimerFunc(5000, stop_animation, 0) 
 
     def distance_fwd():
         point = robot.get_forward_wall(room_corners)
