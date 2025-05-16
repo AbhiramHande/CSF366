@@ -30,7 +30,7 @@ left_dist = float('inf')
 extra_dist = 0
 extra_dir = None
 
-def load_room(filename="maze.txt"):
+def load_room(filename="room.txt"):
     global room_corners, room_bounds, robot, target_value, target_index
     room_corners.clear()
 
@@ -253,13 +253,18 @@ def update(value):
 
 
 def main():
+    if len(sys.argv) < 2:
+        load_room("room.txt")
+    else:
+        load_room(sys.argv[1])
+
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB)
     glutInitWindowSize(window_width, window_height)
     glutInitWindowPosition(100, 100)
     glutCreateWindow(b"2D Robot Simulation")
 
-    load_room()
+    
     glClearColor(0.0, 0.0, 0.0, 1.0)
     glutDisplayFunc(display)
     glutReshapeFunc(reshape)
